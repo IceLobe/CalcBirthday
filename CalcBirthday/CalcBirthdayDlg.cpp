@@ -31,9 +31,12 @@ void CCalcBirthdayDlg::calcBirthday()
 	monthCalendar.GetCurSel(ctime);
 	std::wstring year = cbb.calcYear(ctime.GetYear());
 	std::wstring month = cbb.calcMonth(ctime.GetYear(), ctime.GetMonth());
+	std::wstring day = cbb.calcDay(ctime);
 	CString tmp(year.c_str());
 	tmp.Append(month.c_str());
+	tmp.Append(day.c_str());
 	SetDlgItemText(IDC_TXTVALUE, tmp);
+	SetDlgItemText(IDC_TXTRIZHU, L"日柱数为：" + cbb.gzr);
 }
 
 void CCalcBirthdayDlg::DoDataExchange(CDataExchange* pDX)
