@@ -17,7 +17,6 @@
 // CCalcBirthdayDlg 对话框
 
 
-
 CCalcBirthdayDlg::CCalcBirthdayDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_CALCBIRTHDAY_DIALOG, pParent)
 {
@@ -26,14 +25,26 @@ CCalcBirthdayDlg::CCalcBirthdayDlg(CWnd* pParent /*=nullptr*/)
 
 void CCalcBirthdayDlg::calcBirthday()
 {
-	CTime ctime;
+	SYSTEMTIME stime;
+	monthCalendar.GetCurSel(&stime);
+
 	CalcBirthdayBase cbb = CalcBirthdayBase();
-	monthCalendar.GetCurSel(ctime);
-	std::wstring year = cbb.calcYear(ctime.GetYear());
-	std::wstring month = cbb.calcMonth(ctime.GetYear(), ctime.GetMonth());
+	
+	int days = cbb.diffDate(cbb.begintime, stime);
+
+	UINT32 gzr = days % 60;
+
+	std::wstring year = cbb.calcYear(stime.wYear);
+	std::wstring month = cbb.calcMonth(stime.wYear, stime.wMonth);
+	std::wstring day = cbb.calcDay(gzr);
 	CString tmp(year.c_str());
 	tmp.Append(month.c_str());
+	tmp.Append(day.c_str());
 	SetDlgItemText(IDC_TXTVALUE, tmp);
+	CString rizhu(L"");
+	rizhu.Format(L"%d", gzr);
+	rizhu.Insert(0, L"日柱数为：");
+	SetDlgItemText(IDC_TXTRIZHU, rizhu);
 }
 
 void CCalcBirthdayDlg::DoDataExchange(CDataExchange* pDX)

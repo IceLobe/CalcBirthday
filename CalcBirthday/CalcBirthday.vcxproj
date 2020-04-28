@@ -186,6 +186,7 @@
     <ClInclude Include="CalcBirthday.h" />
     <ClInclude Include="CalcBirthdayBase.h" />
     <ClInclude Include="CalcBirthdayDlg.h" />
+    <ClInclude Include="Date.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
