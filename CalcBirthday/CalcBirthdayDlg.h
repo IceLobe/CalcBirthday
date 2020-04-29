@@ -36,4 +36,8 @@ public:
 	afx_msg void OnMcnSelectMonthcalen(NMHDR* pNMHDR, LRESULT* pResult);
 	// 日期控件
 	CMonthCalCtrl monthCalendar;
+	afx_msg void OnMcnSelchangeMonthcalen(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnEnSetfocusTxtlunarcalendar();
+	afx_msg void OnEnSetfocusTxtvalue();
+	afx_msg void OnEnSetfocusTxtrizhu();
 };

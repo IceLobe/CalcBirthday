@@ -1,3 +1,6 @@
-﻿  CalcBirthdayBase.cpp
-E:\IceLeaf\Documents\C++_Repository\CalcBirthday\CalcBirthday\CalcBirthdayBase.cpp(80,13): warning C4244: “初始化”: 从“double”转换到“int”，可能丢失数据
+﻿  pch.cpp
+  CalcBirthday.cpp
+  CalcBirthdayBase.cpp
+  CalcBirthdayDlg.cpp
+  正在生成代码...
   CalcBirthday.vcxproj -> E:\IceLeaf\Documents\C++_Repository\CalcBirthday\Debug\CalcBirthday.exe

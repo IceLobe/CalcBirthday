@@ -17,7 +17,6 @@
 // CCalcBirthdayDlg 对话框
 
 
-
 CCalcBirthdayDlg::CCalcBirthdayDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_CALCBIRTHDAY_DIALOG, pParent)
 {
@@ -26,17 +25,30 @@ CCalcBirthdayDlg::CCalcBirthdayDlg(CWnd* pParent /*=nullptr*/)
 
 void CCalcBirthdayDlg::calcBirthday()
 {
-	CTime ctime;
+	SYSTEMTIME stime;
+	monthCalendar.GetCurSel(&stime);
 	CalcBirthdayBase cbb = CalcBirthdayBase();
-	monthCalendar.GetCurSel(ctime);
-	std::wstring year = cbb.calcYear(ctime.GetYear());
-	std::wstring month = cbb.calcMonth(ctime.GetYear(), ctime.GetMonth());
-	std::wstring day = cbb.calcDay(ctime);
+	/*年*/
+	std::wstring year = cbb.calcYear(stime.wYear);
+	/*月*/
+	Date temp = cbb.GetLunarCalendarMonth(stime);
+	SetDlgItemText(IDC_TXTLUNARCALENDAR, temp.lunarCalendar.c_str());
+	std::wstring month = cbb.calcMonth(stime.wYear, temp.month);
+	/*日*/
+	int days = cbb.diffDate(cbb.begintime, stime);
+	UINT32 gzr = (days - 1) % 60;
+	std::wstring day = cbb.calcDay(gzr);
+	/*显示在文本框中*/
 	CString tmp(year.c_str());
 	tmp.Append(month.c_str());
 	tmp.Append(day.c_str());
 	SetDlgItemText(IDC_TXTVALUE, tmp);
-	SetDlgItemText(IDC_TXTRIZHU, L"日柱数为：" + cbb.gzr);
+	/*日柱*/
+	CString rizhu(L"");
+	rizhu.Format(L"%d", gzr + 1);
+	rizhu.Insert(0, L"日柱数为：");
+	SetDlgItemText(IDC_TXTRIZHU, rizhu);
+	cbb.~CalcBirthdayBase();
 }
 
 void CCalcBirthdayDlg::DoDataExchange(CDataExchange* pDX)
@@ -49,6 +61,10 @@ BEGIN_MESSAGE_MAP(CCalcBirthdayDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	ON_NOTIFY(MCN_SELECT, IDC_MONTHCALEN, &CCalcBirthdayDlg::OnMcnSelectMonthcalen)
+	ON_NOTIFY(MCN_SELCHANGE, IDC_MONTHCALEN, &CCalcBirthdayDlg::OnMcnSelchangeMonthcalen)
+	ON_EN_SETFOCUS(IDC_TXTLUNARCALENDAR, &CCalcBirthdayDlg::OnEnSetfocusTxtlunarcalendar)
+	ON_EN_SETFOCUS(IDC_TXTVALUE, &CCalcBirthdayDlg::OnEnSetfocusTxtvalue)
+	ON_EN_SETFOCUS(IDC_TXTRIZHU, &CCalcBirthdayDlg::OnEnSetfocusTxtrizhu)
 END_MESSAGE_MAP()
 
 
@@ -113,4 +129,48 @@ void CCalcBirthdayDlg::OnMcnSelectMonthcalen(NMHDR* pNMHDR, LRESULT* pResult)
 	// TODO: 在此添加控件通知处理程序代码
 	calcBirthday();
 	*pResult = 0;
+}
+
+
+void CCalcBirthdayDlg::OnMcnSelchangeMonthcalen(NMHDR* pNMHDR, LRESULT* pResult)
+{
+	LPNMSELCHANGE pSelChange = reinterpret_cast<LPNMSELCHANGE>(pNMHDR);
+	// TODO: 在此添加控件通知处理程序代码
+	calcBirthday();
+	*pResult = 0;
+}
+
+
+void CCalcBirthdayDlg::OnEnSetfocusTxtlunarcalendar()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	CString cstr;
+	GetDlgItemText(IDC_TXTLUNARCALENDAR, cstr);
+	CalcBirthdayBase cbb = CalcBirthdayBase();
+	cbb._SetClipboardData(cstr);
+	cbb.~CalcBirthdayBase();
+}
+
+
+void CCalcBirthdayDlg::OnEnSetfocusTxtvalue()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	CString cstr;
+	GetDlgItemText(IDC_TXTVALUE, cstr);
+	CalcBirthdayBase cbb = CalcBirthdayBase();
+	cbb._SetClipboardData(cstr);
+	cbb.~CalcBirthdayBase();
+}
+
+
+void CCalcBirthdayDlg::OnEnSetfocusTxtrizhu()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	std::wstring wstr = L"";
+	CString cstr;
+	GetDlgItemText(IDC_TXTRIZHU, cstr);
+	CalcBirthdayBase cbb = CalcBirthdayBase();
+	wstr.append(cstr);
+	cbb._SetClipboardData(wstr.substr(wstr.find_first_of(L'：') + 1).c_str());
+	cbb.~CalcBirthdayBase();
 }
